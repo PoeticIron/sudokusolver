@@ -10,19 +10,28 @@ namespace ConsoleApp4
 {
     class Program
     {
+        public static bool performanceTest = false;
+
         static void Main(string[] args)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             int solved = 0;
-            for(int i = 0; i < 500000; i++)
+            if (performanceTest)
             {
-                if(stopWatch.ElapsedMilliseconds % 1000 == 0)
+                for (int i = 0; i < 500000; i++)
                 {
-                    Console.WriteLine((i-solved).ToString() + " solved per second");
-                    System.Threading.Thread.Sleep(1);
-                    solved = i;
+                    if (stopWatch.ElapsedMilliseconds % 1000 == 0)
+                    {
+                        Console.WriteLine((i - solved).ToString() + " solved per second");
+                        System.Threading.Thread.Sleep(1);
+                        solved = i;
+                    }
+                    second();
                 }
+            }
+            else
+            {
                 second();
             }
             Console.WriteLine("Done!");
@@ -79,8 +88,8 @@ namespace ConsoleApp4
         {
             Console.Write("\n");
             Console.Write("\n");
-
-            for(int x = 0; x < tiles.Length; x++)
+            System.Threading.Thread.Sleep(500);
+            for (int x = 0; x < tiles.Length; x++)
             {
                 for (int y = 0; y < tiles.Length; y++)
                 {
@@ -88,21 +97,22 @@ namespace ConsoleApp4
                     {
                         int origin = original[x][y];
                         int newtile = tiles[x][y];
-                        if(origin != newtile)
+                        if (origin != newtile)
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            if(x==cx && y == cy)
+                            if (x == cx && y == cy)
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
                             }
                         }
-                        else { 
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
                         }
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Black;
                     }
                     Console.Write(tiles[x][y]);
                 }
@@ -114,7 +124,7 @@ namespace ConsoleApp4
             int numblanks = 1;
             int size = tiles.Length;
             Dictionary<int, int> possiblesInit = Enumerable.Range(1, size).ToList().Zip(Enumerable.Range(1, size).ToList(), (k, v) => new { k, v }).ToDictionary(x => x.k, x => x.v);
-            //print(tiles, original,null,null);
+            if(!performanceTest) print(tiles, original, null, null);
             while (numblanks > 0)
             {
                 numblanks = 0;
@@ -163,13 +173,14 @@ namespace ConsoleApp4
                             }
                             else
                             {
-                                
+
                                 numblanks++;
                             }
-                            if(tiles[i][j] != 0)
+                            if (tiles[i][j] != 0)
                             {
-                               // print(tiles, original, i,j);
-                                
+                                if (!performanceTest) {
+                                     print(tiles, original, i,j);
+                                }
                             }
                         }
                     }
